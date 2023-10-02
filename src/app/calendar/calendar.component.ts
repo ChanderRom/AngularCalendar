@@ -41,15 +41,16 @@ export class CalendarComponent {
     action: string;
     event: CalendarEvent;
   }
-
-  view: CalendarView = CalendarView.Month
   
   activeDayIsOpen: boolean = true
   
-  viewDate: Date = new Date()
-
-
+  
+  
   //DECLARATIONS
+  viewDate: Date = new Date()
+  
+  view: CalendarView = CalendarView.Month
+  
   CalendarView = CalendarView
 
   refresh = new Subject<void>()
@@ -60,18 +61,16 @@ export class CalendarComponent {
     this.view = view
   }
 
+  
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false
   }
 
-  handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action }
-    this.modal.open(this.modalContent, { size: 'lg' })
-  }
 
   eventClicked({ event }: { event: CalendarEvent }): void {
     console.log('Event clicked', event);
   }
+
 
   addEvent(): void {
     this.events = [
@@ -89,6 +88,7 @@ export class CalendarComponent {
       },
     ]
   }
+
 
   deleteEvent(eventToDelete: CalendarEvent) {
     this.events = this.events.filter((event) => event !== eventToDelete)
@@ -109,6 +109,7 @@ export class CalendarComponent {
     }
   }
 
+
   eventTimesChanged({
     event,
     newStart,
@@ -127,26 +128,36 @@ export class CalendarComponent {
     this.handleEvent('Dropped or resized', event);
   }
 
+
+  handleEvent(action: string, event: CalendarEvent): void {
+    this.modalData = { event, action }
+    this.modal.open(this.modalContent, { size: 'lg' })
+  }
+
+
   
-  // MOCK UP PROPERTIES
+  // ACTIONS
   actions: CalendarEventAction[] = [
     {
-      label: '<i class="fas fa-fw fa-pencil-alt"></i>',
+      label: '<i class="bi bi-pencil-fill i-button"></i>',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.handleEvent('Edited', event)
       },
     },
     {
-      label: '<i class="fas fa-fw fa-trash-alt"></i>',
+      label: '<i class="bi bi-trash3-fill i-button"></i>',
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.events = this.events.filter((iEvent) => iEvent !== event)
-        this.handleEvent('Deleted', event)
+        this.deleteEvent(event)
       },
     },
   ]
 
+
+
+  // MOCK UP EVENTS
   events: CalendarEvent[] = [
     {
       start: subDays(startOfDay(new Date()), 1),

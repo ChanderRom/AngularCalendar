@@ -9,6 +9,6 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     FormsModule,
-  ]
+  ],
 })
 export class CalendarModule { }

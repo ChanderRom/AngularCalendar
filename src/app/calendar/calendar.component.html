@@ -8,7 +8,7 @@
                 [view]="view"
                 [(viewDate)]="viewDate"
                 (viewDateChange)="closeOpenMonthViewDay()">
-                <
+                <i class="bi bi-chevron-left"></i>
             </div>
 
             <div
@@ -16,7 +16,7 @@
                 mwlCalendarNextView [view]="view"
                 [(viewDate)]="viewDate"
                 (viewDateChange)="closeOpenMonthViewDay()">
-                >
+                <i class="bi bi-chevron-right"></i>
             </div>
 
             <div
@@ -62,21 +62,29 @@
         *ngSwitchCase="CalendarView.Month"
         [viewDate]="viewDate"
         [events]="events"
-        (eventClicked)="eventClicked($event)">
+        [refresh]="refresh"
+        [activeDayIsOpen]="activeDayIsOpen"
+        (dayClicked)="dayClicked($event.day)"
+        (eventClicked)="handleEvent('Clicked', $event.event)"
+        (eventTimesChanged)="eventTimesChanged($event)">
     </mwl-calendar-month-view>
 
     <mwl-calendar-week-view
         *ngSwitchCase="CalendarView.Week"
         [viewDate]="viewDate"
         [events]="events"
-        (eventClicked)="eventClicked($event)">
+        [refresh]="refresh"
+        (eventClicked)="handleEvent('Clicked', $event.event)"
+        (eventTimesChanged)="eventTimesChanged($event)">
     </mwl-calendar-week-view>
 
     <mwl-calendar-day-view
         *ngSwitchCase="CalendarView.Day"
         [viewDate]="viewDate"
         [events]="events"
-        (eventClicked)="eventClicked($event)">
+        [refresh]="refresh"
+        (eventClicked)="handleEvent('Clicked', $event.event)"
+        (eventTimesChanged)="eventTimesChanged($event)">
     </mwl-calendar-day-view>
 </div>
 
