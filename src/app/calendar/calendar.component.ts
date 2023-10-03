@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
+import flatpickr from "flatpickr";
 
 const colors: Record<string, EventColor> = {
   red: {
@@ -44,8 +45,6 @@ export class CalendarComponent {
   
   activeDayIsOpen: boolean = true
   
-  
-  
   //DECLARATIONS
   viewDate: Date = new Date()
   
@@ -61,7 +60,7 @@ export class CalendarComponent {
     this.view = view
   }
 
-  
+
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false
   }
@@ -123,9 +122,8 @@ export class CalendarComponent {
           end: newEnd,
         }
       }
-      return iEvent;
+      return iEvent
     })
-    this.handleEvent('Dropped or resized', event);
   }
 
 
@@ -149,6 +147,7 @@ export class CalendarComponent {
       label: '<i class="bi bi-trash3-fill i-button"></i>',
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
+        this.handleEvent(`Event: ${event.title}, deleted`, event)
         this.events = this.events.filter((iEvent) => iEvent !== event)
         this.deleteEvent(event)
       },

@@ -142,11 +142,11 @@
                         class="form-control"
                         type="text"
                         mwlFlatpickr
-                        [(ngModel)]="event.start"
-                        (ngModelChange)="refresh.next()"
                         [altInput]="true"
                         [convertModelValue]="true"
                         [enableTime]="true"
+                        [(ngModel)]="event.start"
+                        (ngModelChange)="refresh.next()"
                         dateFormat="Y-m-dTH:i"
                         altFormat="F j, Y H:i"
                         placeholder="Not set" />
@@ -156,11 +156,11 @@
                         class="form-control"
                         type="text"
                         mwlFlatpickr
-                        [(ngModel)]="event.end"
-                        (ngModelChange)="refresh.next()"
                         [altInput]="true"
                         [convertModelValue]="true"
                         [enableTime]="true"
+                        [(ngModel)]="event.end"
+                        (ngModelChange)="refresh.next()"
                         dateFormat="Y-m-dTH:i"
                         altFormat="F j, Y H:i"
                         placeholder="Not set" />
