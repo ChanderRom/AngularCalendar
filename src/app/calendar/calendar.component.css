@@ -12,3 +12,20 @@ pre {
 .i-button {
     margin-right: 10rem !important;
 }
+
+.price-cell {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.red {
+    background-color: #ad2121;
+}
+
+.yellow {
+    background-color: #FDF1BA;
+}
+.green {
+    background-color: #5fa08a;
+}

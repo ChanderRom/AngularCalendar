@@ -31,7 +31,7 @@
         <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
     </div>
 
-    <div class="col-4">
+    <!-- <div class="col-4">
         <div class="btn-group">
             <div
                 class="btn btn-primary"
@@ -52,14 +52,35 @@
                 Day
             </div>
         </div>
-    </div>
+    </div> -->
 
 </div>
+
+<ng-template #customCellTemplate let-day="day" let-locale="locale" class="cell">
+    <div class="cal-cell-top">
+        <span class="cal-day-number">
+            {{ day.date | calendarDate:'monthViewDayNumber':locale }}
+        </span>
+    </div>
+    <small class="price-cell"
+        [ngStyle]="getPriceColor(+price)">
+        Precio habitación:
+        <br>
+        <strong #price>{{ generateRandomPrice() }}</strong>
+    </small>
+</ng-template>
 
 
 <div [ngSwitch]="view">
     <mwl-calendar-month-view
-        *ngSwitchCase="CalendarView.Month"
+        *ngSwitchCase="'month'"
+        [viewDate]="viewDate"
+        [cellTemplate]="customCellTemplate">
+    </mwl-calendar-month-view>
+    <!--
+    <mwl-calendar-month-view
+        class="col-11"
+        //*ngSwitchCase="CalendarView.Month"
         [viewDate]="viewDate"
         [events]="events"
         [refresh]="refresh"
@@ -69,8 +90,8 @@
         (eventTimesChanged)="eventTimesChanged($event)">
     </mwl-calendar-month-view>
 
-    <mwl-calendar-week-view
-        *ngSwitchCase="CalendarView.Week"
+     <mwl-calendar-week-view
+        //*ngSwitchCase="CalendarView.Week"
         [viewDate]="viewDate"
         [events]="events"
         [refresh]="refresh"
@@ -79,18 +100,18 @@
     </mwl-calendar-week-view>
 
     <mwl-calendar-day-view
-        *ngSwitchCase="CalendarView.Day"
+        //*ngSwitchCase="CalendarView.Day"
         [viewDate]="viewDate"
         [events]="events"
         [refresh]="refresh"
         (eventClicked)="handleEvent('Clicked', $event.event)"
         (eventTimesChanged)="eventTimesChanged($event)">
-    </mwl-calendar-day-view>
+    </mwl-calendar-day-view> -->
 </div>
 
 
 
-<h3 class="my-4">
+<!-- <h3 class="my-4">
     Edit events
     <button class="btn btn-primary float-end" (click)="addEvent()">
         Add new
@@ -201,4 +222,4 @@
             OK
         </button>
     </div>
-</ng-template>
+</ng-template> -->
