@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -25,6 +26,7 @@ import { RouterModule } from '@angular/router';
     BrowserAnimationsModule,
     CommonModule,
     FormsModule,
+    HttpClientModule,
     NgbModalModule,
     RouterModule,
     

@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef, OnInit, ElementRef, ViewChildren, QueryList } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CalendarEvent, CalendarView } from 'angular-calendar';
+import { CalendarEvent, CalendarMonthViewBeforeRenderEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
+import { HotelService } from '../hotel/hotel.service';
+import { Hotel } from '../interfaces/interfaces';
 
 
 @Component({
@@ -15,9 +16,10 @@ import { CalendarEvent, CalendarView } from 'angular-calendar';
 export class CalendarComponent implements OnInit {
 
   constructor(
-    private modal: NgbModal,
+    private hotelService: HotelService
   ) {}
 
+  hotelData!: Hotel[];
 
   colors = {
     red: '#ad2121',
@@ -25,65 +27,56 @@ export class CalendarComponent implements OnInit {
     green: '#5fa08a',
   }
 
-  price!: number
-  
-  
-  @ViewChildren('price') priceElements!: QueryList<ElementRef>
-  
 
-  generateRandomPrice(): number {
-    return this.price = Math.floor(Math.random() * (1200 - 30 + 1)) + 30
-  }
 
-  
-  getPriceColor(price: number) {
-    if (price < 200) {
-      return {
-        'background-color': '#ad2121'
-      }
-    } else if (price >= 200 && price < 500) {
-      return {
-        'background-color': '#FDF1BA'
-      }
-    } else if (price >= 500) {
-      console.log(price)
-      return {
-        'background-color': '#5fa08a'
-      }
-    }
-    return
-  }
-  
-  // getPriceColor(price: number) {
-  //   if (price < 200) {
-  //     return {
-  //       'background-color': this.colors['green']
-  //     }
-  //   } else if (price >= 200 && price < 500) {
-  //     return {
-  //       'background-color': this.colors['yellow']
-  //     }
-  //   } else if (price >= 500) {
-  //     return {
-  //       'background-color': this.colors['red']
-  //     }
-  //   }
-  //   return
-  // }
-  
-  ngAfterViewInit() {
-    this.priceElements.forEach(element => {
-      const value = parseInt(element.nativeElement.textContent)
-
-      this.getPriceColor(value)
+  ngOnInit(): void {
+    this.hotelService.getHotels().subscribe((data) => {
+      data[0].rooms.single.daily_prices.forEach(element => {
+        this.events.push({
+          start: new Date(element.start),
+          price: element.price
+        })
+      })
     })
+    
+    console.log(this.events)
   }
-  
-  ngOnInit() {
-    this.generateRandomPrice()
-  }
-  
-  
+
+
+  // beforeMonthViewRender(renderEvent: CalendarMonthViewBeforeRenderEvent): void {
+  //   this.hotelService.getHotels().subscribe((data) => {
+  //     data[0].rooms.single.daily_prices.forEach(element => {
+  //       this.events.push({
+  //         start: new Date(element.start),
+  //         price: element.price
+  //       })
+  //     })
+  //     console.log(data)
+  //   })
+  // }
+
+
+
+
+  events: CalendarEvent[] = [
+    {
+      start: new Date('2023-11-03'),
+      price: 240
+    },
+    {
+      start: new Date('2023-11-12'),
+      price: 25
+    },
+    {
+      start: new Date('2023-11-26'),
+      price: 79
+    },
+  ]
+
+
+
+
+
 
 
 
@@ -116,6 +109,12 @@ export class CalendarComponent implements OnInit {
   CalendarView = CalendarView
 
   refresh = new Subject<void>()
+
+  locale: string = 'en';
+
+  weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
+
+  weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
 
 
   // METHODS
@@ -261,4 +260,5 @@ export class CalendarComponent implements OnInit {
 //       draggable: true,
 //     },
 //   ]
+
 }
