@@ -33,6 +33,7 @@
 
 </div>
 
+
 <ng-template #customCellTemplate let-day="day" let-locale="locale" class="cell">
     <div class="cal-cell-top">
         <span class="cal-day-number">
@@ -42,19 +43,27 @@
     <small class="price-cell">
         Precio habitación:
         <br>
-        <strong>{{ day.events }}</strong>
+        <strong>{{ day.events | json }}</strong>
     </small>
 </ng-template>
 
+<ng-template #loading>
+    <div class="text-center">
+      <i class="fas fa-spin fa-spinner fa-5x"></i> <br />
+      Loading events...
+    </div>
+</ng-template>
 
-<div [ngSwitch]="view">
-    <mwl-calendar-month-view
-        *ngSwitchCase="'month'"
-        [viewDate]="viewDate"
-        [locale]="locale"
-        [weekStartsOn]="weekStartsOn"
-        [weekendDays]="weekendDays"
-        [cellTemplate]="customCellTemplate"
-        [events]="events">
-    </mwl-calendar-month-view>
+<div *ngIf="events$ | async; else loading; let events">
+    <div [ngSwitch]="view">
+        <mwl-calendar-month-view
+            *ngSwitchCase="'month'"
+            [viewDate]="viewDate"
+            [locale]="locale"
+            [weekStartsOn]="weekStartsOn"
+            [weekendDays]="weekendDays"
+            [cellTemplate]="customCellTemplate"
+            [events]="events">
+        </mwl-calendar-month-view>
+    </div>
 </div>
