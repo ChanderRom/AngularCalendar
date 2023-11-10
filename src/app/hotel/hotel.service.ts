@@ -7,11 +7,15 @@ import { Hotel } from '../interfaces/interfaces';
   providedIn: 'root'
 })
 export class HotelService {
-  private apiUrl = 'http://localhost:3000/hotels';
+  private apiUrl = `http://localhost:3000/hotels/`;
 
   constructor(private http: HttpClient) { }
 
+  getHotel(hotelId: number): Observable<Hotel> {
+    return this.http.get<Hotel>(`${this.apiUrl}${hotelId}`);
+  }
+
   getHotels(): Observable<Hotel[]> {
-    return this.http.get<Hotel[]>(this.apiUrl);
+    return this.http.get<Hotel[]>(this.apiUrl)
   }
 }

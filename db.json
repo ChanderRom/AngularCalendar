@@ -1,6 +1,7 @@
 {
     "hotels": [
       {
+        "id": 0,
         "name": "Hotel 1",
         "rooms": {
           "single": {
@@ -111,6 +112,7 @@
         }
       },
       {
+        "id": 1,
         "name": "Hotel 2",
         "rooms": {
           "single": {

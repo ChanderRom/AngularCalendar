@@ -6,16 +6,13 @@ export interface Room {
 }
   
 export interface Hotel {
+    id: number,
     name: string;
     rooms: {
         single: Room;
         double: Room;
         suite: Room;
     }
-}
-  
-export interface DatabaseResponse {
-    hotels: Hotel[];
 }
 
 export interface CustomCalendarEvent extends CalendarEvent {
