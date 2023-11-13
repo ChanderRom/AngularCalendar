@@ -1,18 +1,16 @@
 import { CalendarEvent } from 'angular-calendar';
 
 export interface Room {
+    id: string;
+    name: string;
     daily_prices: { start: Date; price: number }[];
     total: number;
 }
   
 export interface Hotel {
-    id: number,
+    id: string;
     name: string;
-    rooms: {
-        single: Room;
-        double: Room;
-        suite: Room;
-    }
+    rooms: Room[];
 }
 
 export interface CustomCalendarEvent extends CalendarEvent {

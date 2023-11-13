@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Observable, Subscription, map, of } from 'rxjs';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { HotelService } from '../hotel/hotel.service';
@@ -16,7 +16,8 @@ import { CustomCalendarEvent, Hotel, Room } from '../interfaces/interfaces';
 export class CalendarComponent implements OnInit {
 
   constructor(
-    private hotelService: HotelService
+    private _cdr: ChangeDetectorRef,
+    private hotelService: HotelService,
   ) {}
 
 
@@ -26,32 +27,29 @@ export class CalendarComponent implements OnInit {
     green: '#5fa08a',
   }
 
+  hotelsData: Hotel[] = []
   
-  hotelData: Hotel[] = []
+  roomsData: Room[] = []
+
+  selectedHotel: Hotel | null = null
   
-  events$!: Observable<CustomCalendarEvent[]>
+  selectedRoom: Room | null = null
 
-  selectedHotel: string | null = null
-
-  rooms: string[] = ["single", "double", "suite"]
-
-  selectedRoom: string | null = null
+  calendarEvents$!: Observable<CustomCalendarEvent[]>
 
 
   ngOnInit(): void {
-    this.fetchEvents()
-    this.fetchHotels()
+    this.initData();
   }
 
-  fetchEvents(hotelId?: number): void{
-    hotelId = hotelId !== undefined ? hotelId : 0
 
-    this.events$ = this.hotelService.getHotel(hotelId).pipe(
+  fetchEvents(hotelId: string, roomId: string): void{
+    this.calendarEvents$ = this.hotelService.getHotel(hotelId).pipe(
       map((hotel: Hotel) => {
-        const events: CustomCalendarEvent[] = []
+        const events: CustomCalendarEvent[] = [];
 
-        if (hotel && hotel.rooms.single) {
-          hotel.rooms.single.daily_prices.forEach(element => {
+        if (hotel && hotel.rooms && hotel.rooms.length) {
+          hotel.rooms.find(r => r.id === roomId)?.daily_prices.forEach(element => {
             events.push({
               start: new Date(element.start),
               price: element.price,
@@ -60,30 +58,39 @@ export class CalendarComponent implements OnInit {
             })
           })
         }
-        return events
+        return events;
       })
     )
-    const subscription: Subscription = this.events$.subscribe(events => {
-      this.events$ = of(events)
+    const subscription: Subscription = this.calendarEvents$.subscribe(events => {
+      this.calendarEvents$ = of(events);
+      this._cdr.detectChanges();
     })
   }
 
 
-  fetchHotels(): void {
+  initData(): void {
     this.hotelService.getHotels().subscribe((hotels: Hotel[]) => {
-      this.hotelData = hotels;
-      console.log(this.hotelData);
+      this.hotelsData = hotels;
+      this.selectedHotel = this.hotelsData[0];
+      this.roomsData = this.selectedHotel.rooms;
+      this.selectedRoom = this.selectedHotel.rooms[0];
+      this.fetchEvents(this.selectedHotel.id, this.selectedRoom.id);
     });
   }
 
 
   onHotelChange(hotel: Hotel): void {
-    this.selectedHotel = hotel.name
-    this.fetchEvents(hotel.id)
+    this.selectedHotel = hotel;
+    this.roomsData = this.selectedHotel.rooms;
+    this.selectedRoom = this.selectedHotel.rooms[0];
+    this.fetchEvents(this.selectedHotel.id, this.selectedRoom.id);
   }
 
-  onRoomChange(room: string): void {
-    this.selectedRoom = room
+
+
+  onRoomChange(room: Room): void {
+    this.selectedRoom = room;
+    this.fetchEvents(this.selectedHotel!.id, this.selectedRoom.id);
   }
 
 

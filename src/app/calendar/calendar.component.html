@@ -33,16 +33,16 @@
                     class="btn btn-outline-primary"
                     id="dropdownBasic"
                     ngbDropdownToggle>
-                    {{ selectedHotel ? selectedHotel : "Hotel" }}
+                    {{ (selectedHotel ? selectedHotel.name : "Hotel") | titlecase }}
                 </button>
             
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic">
-                <button
-                    *ngFor="let hotel of hotelData"
-                    class="dropdown-item"
-                    (click)="onHotelChange(hotel)">
-                    {{ hotel.name | json }}
-                </button>
+                    <button
+                        *ngFor="let hotel of hotelsData"
+                        class="dropdown-item"
+                        (click)="onHotelChange(hotel)">
+                        {{ hotel.name | titlecase }}
+                    </button>
                 </div>
             </div>
 
@@ -51,16 +51,16 @@
                     class="btn btn-outline-primary"
                     id="dropdownBasic"
                     ngbDropdownToggle>
-                    {{ selectedRoom ? selectedRoom : "Room" }}
+                    {{ (selectedRoom ? selectedRoom.name : "Room") | titlecase }}
                 </button>
             
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic">
-                <button
-                    *ngFor="let room of rooms"
-                    class="dropdown-item"
-                    (click)="onRoomChange(room)">
-                    {{ room | titlecase }}
-                </button>
+                    <button
+                        *ngFor="let room of roomsData"
+                        class="dropdown-item"
+                        (click)="onRoomChange(room)">
+                        {{ room.name | titlecase }}
+                    </button>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
     </div>
 </ng-template>
 
-<div *ngIf="events$ | async; else loading; let events">
+<div *ngIf="calendarEvents$ | async; else loading; let events">
     <div [ngSwitch]="view">
         <mwl-calendar-month-view
             *ngSwitchCase="'month'"
