@@ -1,6 +1,5 @@
 <div class="row text-center my-4 justify-content-between w-100">
-
-    <div class="col-4">
+    <div class="col-6">
         <div class="btn-group">
             <div
                 class="btn btn-primary"
@@ -24,13 +23,10 @@
                 mwlCalendarToday [(viewDate)]="viewDate">
                 Today
             </div>
-        </div>
-
-
-        <div class="d-flex">
+            
             <div ngbDropdown>
                 <button
-                    class="btn btn-outline-primary"
+                    class="btn"
                     id="dropdownBasic"
                     ngbDropdownToggle>
                     {{ (selectedHotel ? selectedHotel.name : "Hotel") | titlecase }}
@@ -45,10 +41,10 @@
                     </button>
                 </div>
             </div>
-
+    
             <div ngbDropdown>
                 <button
-                    class="btn btn-outline-primary"
+                    class="btn"
                     id="dropdownBasic"
                     ngbDropdownToggle>
                     {{ (selectedRoom ? selectedRoom.name : "Room") | titlecase }}
@@ -64,13 +60,13 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 
-    
-    <div class="col-4">
+    <div class="col-6">
         <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
     </div>
-
 </div>
 
 
@@ -80,11 +76,16 @@
             {{ day.date | calendarDate:'monthViewDayNumber':locale }}
         </span>
     </div>
-    <small class="price-cell">
-        Precio habitación:
-        <br>
-        <strong>{{ day.events.length > 0 ? day.events[0].price : 'No price data ' }}</strong>
-    </small>
+    <div
+        [ngStyle]="{'background-color': getColor(day.events.length > 0 ? day.events[0].prediction : 0)}"
+        class="price-cell">
+        <small>
+            <strong>{{ day.events.length > 0 ? 'Room price: ' + day.events[0].price : 'No data' }}</strong>
+        </small>
+        <small>
+            {{ day.events.length > 0 ? 'Prediction: ' + day.events[0].prediction + '%' : '' }}
+        </small>
+    </div>
 </ng-template>
 
 <ng-template #loading>

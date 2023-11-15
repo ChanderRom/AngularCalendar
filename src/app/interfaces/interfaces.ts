@@ -16,4 +16,5 @@ export interface Hotel {
 export interface CustomCalendarEvent extends CalendarEvent {
     start: Date;
     price: number;
+    prediction: number;
 }

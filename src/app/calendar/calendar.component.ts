@@ -23,19 +23,23 @@ export class CalendarComponent implements OnInit {
 
   colors = {
     red: '#ad2121',
-    yellow: '#FDF1BA',
+    orange: '#c9a110',
     green: '#5fa08a',
   }
 
-  hotelsData: Hotel[] = []
+  hotelsData: Hotel[] = [];
   
-  roomsData: Room[] = []
+  roomsData: Room[] = [];
 
-  selectedHotel: Hotel | null = null
+  selectedHotel: Hotel | null = null;
   
-  selectedRoom: Room | null = null
+  selectedRoom: Room | null = null;
 
-  calendarEvents$!: Observable<CustomCalendarEvent[]>
+  calendarEvents$!: Observable<CustomCalendarEvent[]>;
+
+  totalRooms!: number;
+
+  prediction!: number;
 
 
   ngOnInit(): void {
@@ -43,28 +47,32 @@ export class CalendarComponent implements OnInit {
   }
 
 
-  fetchEvents(hotelId: string, roomId: string): void{
-    this.calendarEvents$ = this.hotelService.getHotel(hotelId).pipe(
-      map((hotel: Hotel) => {
-        const events: CustomCalendarEvent[] = [];
+  fetchEvents(hotelId: string, roomId: string, totalRooms: number): void{
+    this.hotelService.getHotel(hotelId)
+      .pipe(
+        map((hotel: Hotel) => {
+          const events: CustomCalendarEvent[] = [];
 
-        if (hotel && hotel.rooms && hotel.rooms.length) {
-          hotel.rooms.find(r => r.id === roomId)?.daily_prices.forEach(element => {
-            events.push({
-              start: new Date(element.start),
-              price: element.price,
-              title: '',
-              allDay: true,
+          if (hotel && hotel.rooms && hotel.rooms.length) {
+            hotel.rooms.find(r => r.id === roomId)?.daily_prices.forEach(element => {
+              const prediction: number = this.hotelService.getPrediction(totalRooms);
+
+              events.push({
+                start: new Date(element.start),
+                price: element.price,
+                title: '',
+                allDay: true,
+                prediction: prediction
+              })
             })
-          })
-        }
-        return events;
-      })
-    )
-    const subscription: Subscription = this.calendarEvents$.subscribe(events => {
-      this.calendarEvents$ = of(events);
-      this._cdr.detectChanges();
-    })
+          }
+          return events;
+        })
+      )
+      .subscribe(events => {
+        this.calendarEvents$ = of(events);
+        this._cdr.detectChanges();
+      });
   }
 
 
@@ -74,7 +82,8 @@ export class CalendarComponent implements OnInit {
       this.selectedHotel = this.hotelsData[0];
       this.roomsData = this.selectedHotel.rooms;
       this.selectedRoom = this.selectedHotel.rooms[0];
-      this.fetchEvents(this.selectedHotel.id, this.selectedRoom.id);
+      this.totalRooms = this.selectedRoom.total;
+      this.fetchEvents(this.selectedHotel.id, this.selectedRoom.id, this.totalRooms);
     });
   }
 
@@ -83,19 +92,29 @@ export class CalendarComponent implements OnInit {
     this.selectedHotel = hotel;
     this.roomsData = this.selectedHotel.rooms;
     this.selectedRoom = this.selectedHotel.rooms[0];
-    this.fetchEvents(this.selectedHotel.id, this.selectedRoom.id);
+    this.totalRooms = this.selectedRoom.total;
+    this.fetchEvents(this.selectedHotel.id, this.selectedRoom.id, this.totalRooms);
   }
 
 
 
   onRoomChange(room: Room): void {
     this.selectedRoom = room;
-    this.fetchEvents(this.selectedHotel!.id, this.selectedRoom.id);
+    this.totalRooms = this.selectedRoom.total;
+    this.fetchEvents(this.selectedHotel!.id, this.selectedRoom.id, this.totalRooms);
   }
 
 
 
-
+  getColor(prediction: number): string {
+    if (prediction <= 33) {
+      return this.colors.red;
+    } else if (prediction <= 66) {
+      return this.colors.orange;
+    } else {
+      return this.colors.green;
+    }
+  }
 
 
 

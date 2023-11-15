@@ -17,15 +17,5 @@ pre {
     width: 100%;
     margin: 0 auto;
     text-align: center;
-}
-
-.red {
-    background-color: #ad2121;
-}
-
-.yellow {
-    background-color: #FDF1BA;
-}
-.green {
-    background-color: #5fa08a;
+    color: rgb(221, 221, 221);
 }
